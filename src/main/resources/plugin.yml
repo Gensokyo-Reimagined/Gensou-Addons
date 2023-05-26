@@ -1,0 +1,10 @@
+name: oraxen-thing
+version: '${version}'
+main: io.github.kidofcubes.oraxenthing.Oraxen_thing
+api-version: 1.19
+depend: [Oraxen]
+commands:
+  testcommand:
+    description: desc
+    usage: /<command>
+
