@@ -9,9 +9,7 @@ import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.*;
 import io.th0rgal.oraxen.shaded.morepersistentdatatypes.DataType;
 import io.th0rgal.oraxen.utils.BlockHelpers;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
@@ -67,6 +65,8 @@ public class CustomFurniture {
 
 
     public static class CustomFurnitureMechanic extends FurnitureMechanic{
+
+        private final static NamespacedKey BASE_ENTITY_KEY = new NamespacedKey(OraxenPlugin.get(),"BASE_ENTITY_KEY");
         public CustomFurnitureMechanic(MechanicFactory mechanicFactory, ConfigurationSection section) {
             super(mechanicFactory, section);
         }
@@ -118,7 +118,7 @@ public class CustomFurniture {
         }
 
         @Override
-        public Entity place(Location location, ItemStack originalItem, Float yaw, BlockFace facing) {
+        public Entity place(Location location, ItemStack originalItem, Rotation rotation, float yaw, BlockFace facing) {
             if (!location.isWorldLoaded()) return null;
             if (this.notEnoughSpace(yaw, location)) return null;
             assert location.getWorld() != null;
@@ -174,8 +174,8 @@ public class CustomFurniture {
                 //Correct FIXED item display yaw until 1.20 fixes this
                 refl("setItemDisplayData",itemDisplay, item, yaw, fld("displayEntityProperties"));
                 Location location = itemDisplay.getLocation();
-                float width = hasHitbox() ? (float) fld(FurnitureHitbox.class, fld("hitbox"),"width") : ((DisplayEntityProperties)fld("displayEntityProperties")).getDisplayWidth();
-                float height = hasHitbox() ? (float) fld(FurnitureHitbox.class,fld("hitbox"),"height") : ((DisplayEntityProperties)fld("displayEntityProperties")).getDisplayHeight();
+                float width = hasHitbox() ? (float) fld(FurnitureHitbox.class, fld("hitbox"),"width") : ((DisplayEntityProperties)fld("displayEntityProperties")).getWidth();
+                float height = hasHitbox() ? (float) fld(FurnitureHitbox.class,fld("hitbox"),"height") : ((DisplayEntityProperties)fld("displayEntityProperties")).getHeight();
                 Interaction interaction = (Interaction) refl("spawnInteractionEntity", itemDisplay, location, width, height, ((DisplayEntityProperties)fld("displayEntityProperties")).isInteractable());
 
                 if (hasBarriers()) setBarrierHitbox2(entity, location, yaw, false);
