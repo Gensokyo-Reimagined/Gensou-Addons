@@ -11,7 +11,6 @@ import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureFactory;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureMechanic;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Rotation;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
@@ -137,7 +136,7 @@ public class FurnitureSwitcher {
                 return;
             }
             if(orig instanceof ItemFrame itemFrame){
-                mechanic.place(location,yaw,itemFrame.getFacing());
+                mechanic.place(location,yaw, itemFrame.getFacing());
             }else if(orig instanceof ItemDisplay){
                 mechanic.place(location,yaw, BlockFace.DOWN); //no blockface from itemdisplay
             }
