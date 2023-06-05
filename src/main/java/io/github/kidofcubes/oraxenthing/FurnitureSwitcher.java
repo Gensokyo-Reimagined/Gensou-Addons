@@ -137,10 +137,9 @@ public class FurnitureSwitcher {
                 return;
             }
             if(orig instanceof ItemFrame itemFrame){
-                mechanic.place(location,yaw, itemFrame.getRotation(),itemFrame.getFacing());
+                mechanic.place(location,yaw,itemFrame.getFacing());
             }else if(orig instanceof ItemDisplay){
-                mechanic.place(location,yaw,Rotation.NONE,BlockFace.DOWN);
-//                mechanic.place(location,yaw, BlockFace.DOWN); //no blockface from itemdisplay
+                mechanic.place(location,yaw, BlockFace.DOWN); //no blockface from itemdisplay
             }
         }
     }
