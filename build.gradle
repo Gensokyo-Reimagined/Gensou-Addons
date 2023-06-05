@@ -23,8 +23,8 @@ repositories {
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
-//    compileOnly "com.github.oraxen:oraxen:1.156.1"
-    compileOnly files("libs/oraxen.jar")
+    compileOnly "com.github.oraxen:oraxen:1.156.1" // <====== change that version number when oraxen updates
+//    compileOnly "com.github.oraxen:oraxen:LATEST"
 }
 
 def targetJavaVersion = 17
@@ -35,11 +35,6 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-}
-
-
-jar {
-    destinationDirectory.set(file("/SSD128GB/oraxenthing/plugins/"))
 }
 
 processResources {
