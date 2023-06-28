@@ -41,6 +41,7 @@ public class FurnitureSwitcher {
 
         @EventHandler(priority = EventPriority.LOWEST)
         private void onRightClick(PlayerInteractEntityEvent event) {
+            if(event.getPlayer().getEquipment().getItemInMainHand().getType().isEmpty()) return;
             Entity entity = event.getRightClicked();
             FurnitureMechanic furnitureMechanic = OraxenFurniture.getFurnitureMechanic(entity);
             if(furnitureMechanic==null||factory.isNotImplementedIn(furnitureMechanic.getItemID())){
@@ -51,6 +52,7 @@ public class FurnitureSwitcher {
         }
         @EventHandler(priority = EventPriority.LOWEST)
         private void onRightClick(PlayerInteractEvent event) {
+            if(event.getPlayer().getEquipment().getItemInMainHand().getType().isEmpty()) return;
             if(event.getHand()!= EquipmentSlot.HAND) return;
             if(event.getClickedBlock()==null||event.getClickedBlock().getType()!= Material.BARRIER){
                 return;
