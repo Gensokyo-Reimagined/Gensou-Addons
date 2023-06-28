@@ -12,7 +12,7 @@ public final class Oraxen_thing extends JavaPlugin {
         // Plugin startup logic
         registerMechanicFactory("randomoffset", FurnitureRandom.FurnitureRandomMechanicFactory::new);
         registerMechanicFactory("furnitureswitcher", FurnitureSwitcher.FurnitureSwitcherMechanicFactory::new);
-        registerMechanicFactory("furniture", CustomFurniture.CustomFurnitureFactory::new);
+//        registerMechanicFactory("furniture", CustomFurniture.CustomFurnitureFactory::new);
         OraxenItems.loadItems();
     }
 
