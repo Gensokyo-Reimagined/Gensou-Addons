@@ -124,7 +124,8 @@ public class FurnitureSwitcher {
                 for (Block barrier : furnitureMechanic.getBarriers().stream().map(blockLoc -> blockLoc.toLocation(orig.getWorld()).getBlock()).collect(Collectors.toSet()))
                     if (location.getBlock().getType() == Material.BARRIER) furnitureMechanic.removeSolid(barrier);
                     else furnitureMechanic.removeAirFurniture(orig);
-            float yaw = orig.getLocation().getYaw();
+//            float yaw = orig.getLocation().getYaw();
+            float yaw = FurnitureMechanic.getFurnitureYaw(orig);
 
 
             int index = furnitures.indexOf(furnitureMechanic.getItemID());
@@ -138,7 +139,7 @@ public class FurnitureSwitcher {
             if(orig instanceof ItemFrame itemFrame){
                 mechanic.place(location,yaw, itemFrame.getFacing());
             }else if(orig instanceof ItemDisplay){
-                mechanic.place(location,yaw, BlockFace.DOWN); //no blockface from itemdisplay
+                mechanic.place(location,yaw, BlockFace.UP); //no blockface from itemdisplay
             }
         }
     }
