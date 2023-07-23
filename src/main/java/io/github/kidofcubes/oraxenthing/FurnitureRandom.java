@@ -3,7 +3,7 @@ package io.github.kidofcubes.oraxenthing;
 import io.th0rgal.oraxen.OraxenPlugin;
 import io.th0rgal.oraxen.api.OraxenFurniture;
 import io.th0rgal.oraxen.api.OraxenItems;
-import io.th0rgal.oraxen.api.events.OraxenFurniturePlaceEvent;
+import io.th0rgal.oraxen.api.events.furniture.OraxenFurniturePlaceEvent;
 import io.th0rgal.oraxen.mechanics.Mechanic;
 import io.th0rgal.oraxen.mechanics.MechanicFactory;
 import io.th0rgal.oraxen.mechanics.MechanicsManager;
@@ -22,12 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FurnitureRandom {
-    public static class FurnitureRandomMechanicManager implements Listener {
 
-        private final FurnitureRandomMechanicFactory factory;
 
-        public FurnitureRandomMechanicManager(FurnitureRandomMechanicFactory factory) {
-            this.factory = factory;
+
+
+    static class FurnitureRandomMechanicFactory extends MechanicFactory implements Listener {
+
+        public FurnitureRandomMechanicFactory(String mechanicid) {
+            super(mechanicid);
+            MechanicsManager.registerListeners(OraxenPlugin.get(), getMechanicID(),this);
+        }
+
+        @Override
+        public Mechanic parse(ConfigurationSection itemMechanicConfiguration) {
+            Mechanic mechanic = new RandomMechanic(this, itemMechanicConfiguration);
+            addToImplemented(mechanic);
+            return mechanic;
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
@@ -36,33 +46,15 @@ public class FurnitureRandom {
 
             Entity entity = event.getBaseEntity();
             String itemID = OraxenItems.getIdByItem(item);
-            if (factory.isNotImplementedIn(itemID)) {
+            if (isNotImplementedIn(itemID)) {
                 return;
             }
-            RandomMechanic durabilityMechanic = (RandomMechanic) factory.getMechanic(itemID);
+            RandomMechanic durabilityMechanic = (RandomMechanic) getMechanic(itemID);
             FurnitureMechanic furnitureMechanic = OraxenFurniture.getFurnitureMechanic(entity);
             if(furnitureMechanic==null){
                 return;
             }
             durabilityMechanic.call(event);
-        }
-    }
-
-
-
-
-    static class FurnitureRandomMechanicFactory extends MechanicFactory {
-
-        public FurnitureRandomMechanicFactory(ConfigurationSection section) {
-            super(section);
-            MechanicsManager.registerListeners(OraxenPlugin.get(),new FurnitureRandomMechanicManager(this));
-        }
-
-        @Override
-        public Mechanic parse(ConfigurationSection itemMechanicConfiguration) {
-            Mechanic mechanic = new RandomMechanic(this, itemMechanicConfiguration);
-            addToImplemented(mechanic);
-            return mechanic;
         }
     }
 

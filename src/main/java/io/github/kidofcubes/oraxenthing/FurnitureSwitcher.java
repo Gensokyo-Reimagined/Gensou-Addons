@@ -39,15 +39,31 @@ public class FurnitureSwitcher {
             this.factory = factory;
         }
 
+
+    }
+
+
+    static class FurnitureSwitcherMechanicFactory extends MechanicFactory implements Listener {
+
+        public FurnitureSwitcherMechanicFactory(String mechanicId) {
+            super(mechanicId);
+            MechanicsManager.registerListeners(OraxenPlugin.get(),getMechanicID(),this);
+        }
+        @Override
+        public Mechanic parse(ConfigurationSection itemMechanicConfiguration) {
+            Mechanic mechanic = new FurnitureSwitcherMechanic(this, itemMechanicConfiguration);
+            addToImplemented(mechanic);
+            return mechanic;
+        }
         @EventHandler(priority = EventPriority.LOWEST)
         private void onRightClick(PlayerInteractEntityEvent event) {
             if(!event.getPlayer().getEquipment().getItemInMainHand().getType().isEmpty()) return;
             Entity entity = event.getRightClicked();
             FurnitureMechanic furnitureMechanic = OraxenFurniture.getFurnitureMechanic(entity);
-            if(furnitureMechanic==null||factory.isNotImplementedIn(furnitureMechanic.getItemID())){
+            if(furnitureMechanic==null||isNotImplementedIn(furnitureMechanic.getItemID())){
                 return;
             }
-            ((FurnitureSwitcherMechanic) factory.getMechanic(furnitureMechanic.getItemID())).call(entity);
+            ((FurnitureSwitcherMechanic) getMechanic(furnitureMechanic.getItemID())).call(entity);
             event.setCancelled(true);
         }
         @EventHandler(priority = EventPriority.LOWEST)
@@ -60,27 +76,12 @@ public class FurnitureSwitcher {
             if(!event.getAction().isRightClick()) return;
             FurnitureMechanic furnitureMechanic = OraxenFurniture.getFurnitureMechanic(event.getClickedBlock());
 
-            if(furnitureMechanic==null||factory.isNotImplementedIn(furnitureMechanic.getItemID())){
+            if(furnitureMechanic==null||isNotImplementedIn(furnitureMechanic.getItemID())){
                 return;
             }
-            ((FurnitureSwitcherMechanic) factory.getMechanic(furnitureMechanic.getItemID()))
+            ((FurnitureSwitcherMechanic) getMechanic(furnitureMechanic.getItemID()))
                     .call(furnitureMechanic.getBaseEntity(event.getClickedBlock()));
             event.setCancelled(true);
-        }
-    }
-
-
-    static class FurnitureSwitcherMechanicFactory extends MechanicFactory {
-
-        public FurnitureSwitcherMechanicFactory(ConfigurationSection section) {
-            super(section);
-            MechanicsManager.registerListeners(OraxenPlugin.get(),new FurnitureSwitcherMechanicManager(this));
-        }
-        @Override
-        public Mechanic parse(ConfigurationSection itemMechanicConfiguration) {
-            Mechanic mechanic = new FurnitureSwitcherMechanic(this, itemMechanicConfiguration);
-            addToImplemented(mechanic);
-            return mechanic;
         }
     }
     private static final Field itemField;
