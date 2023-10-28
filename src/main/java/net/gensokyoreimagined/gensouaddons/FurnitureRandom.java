@@ -1,4 +1,4 @@
-package io.github.kidofcubes.oraxenthing;
+package net.gensokyoreimagined.gensouaddons;
 
 import io.th0rgal.oraxen.OraxenPlugin;
 import io.th0rgal.oraxen.api.OraxenFurniture;

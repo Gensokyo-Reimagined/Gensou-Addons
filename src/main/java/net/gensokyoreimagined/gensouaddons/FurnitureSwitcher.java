@@ -1,18 +1,13 @@
-package io.github.kidofcubes.oraxenthing;
+package net.gensokyoreimagined.gensouaddons;
 
 import io.th0rgal.oraxen.OraxenPlugin;
 import io.th0rgal.oraxen.api.OraxenFurniture;
-import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.mechanics.Mechanic;
 import io.th0rgal.oraxen.mechanics.MechanicFactory;
 import io.th0rgal.oraxen.mechanics.MechanicsManager;
-import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.BlockLocation;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureFactory;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureMechanic;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
@@ -24,23 +19,11 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FurnitureSwitcher {
-    public static class FurnitureSwitcherMechanicManager implements Listener {
-
-        private final FurnitureSwitcherMechanicFactory factory;
-
-        public FurnitureSwitcherMechanicManager(FurnitureSwitcherMechanicFactory factory) {
-            this.factory = factory;
-        }
-
-
-    }
 
 
     static class FurnitureSwitcherMechanicFactory extends MechanicFactory implements Listener {

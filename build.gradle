@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'io.github.kidofcubes'
+group = 'net.gensokyoreimagined'
 version = '1.0-SNAPSHOT'
 
 repositories {
@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly "com.github.oraxen:oraxen:latest.integration" // <====== change that version number when oraxen updates
 //    compileOnly "com.github.oraxen:oraxen:LATEST"
 }

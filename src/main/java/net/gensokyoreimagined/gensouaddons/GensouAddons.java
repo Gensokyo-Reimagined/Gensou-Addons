@@ -1,11 +1,11 @@
-package io.github.kidofcubes.oraxenthing;
+package net.gensokyoreimagined.gensouaddons;
 
 import io.th0rgal.oraxen.api.OraxenItems;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static io.th0rgal.oraxen.mechanics.MechanicsManager.registerMechanicFactory;
 
-public final class Oraxen_thing extends JavaPlugin {
+public final class GensouAddons extends JavaPlugin {
 
     @Override
     public void onEnable() {
