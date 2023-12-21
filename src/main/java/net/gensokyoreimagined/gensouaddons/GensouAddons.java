@@ -33,7 +33,7 @@ public final class GensouAddons extends JavaPlugin {
         }
 
         OraxenItems.loadItems();
-        handler = new FaweFurnitureHandler();
+        handler = new FaweFurnitureHandler(this);
         WorldEdit.getInstance().getEventBus().register(handler);
     }
 

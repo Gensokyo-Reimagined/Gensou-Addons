@@ -36,7 +36,9 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
     private static final Map<String, Field> fieldz = new HashMap<>();
     private Object refl(String methodName, Object... args){
         try {
-            if(methodz.containsKey(methodName)) return methodz.get(methodName).invoke(this,args);
+            if(methodz.containsKey(methodName)){
+                return methodz.get(methodName).invoke(this,args);
+            }
 
             Method[] methods = FurnitureMechanic.class.getDeclaredMethods();
             Method method = null;
@@ -165,10 +167,14 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
         }
     }
 
-    private void setBarrierHitbox(Entity entity, Location location, float yaw, boolean handleLight, Vector offset){
+    public void setBarrierHitbox(Entity entity, Location location, float yaw, boolean handleLight, Vector offset){
+        setBarrierHitbox(entity.getUniqueId(),location,yaw,handleLight,offset, true);
+    }
+    public void setBarrierHitbox(UUID entityUUID, Location location, float yaw, boolean handleLight, Vector offset, boolean place){
         for (Location barrierLocation : this.getLocations(yaw, BlockHelpers.toCenterBlockLocation(location), this.getBarriers())) {
             Block block = barrierLocation.getBlock();
-            block.setType(Material.BARRIER);
+            if(place) block.setType(Material.BARRIER);
+
             PersistentDataContainer data = BlockHelpers.getPDC(block);
             data.set(FURNITURE_KEY, PersistentDataType.STRING, this.getItemID());
             if ((boolean)fld("hasSeat")) {
@@ -179,7 +185,7 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
 
             data.set(ROOT_KEY, PersistentDataType.STRING, new BlockLocation(location.clone()).toString());
             data.set(ORIENTATION_KEY, PersistentDataType.FLOAT, yaw);
-            data.set(BASE_ENTITY_KEY, DataType.UUID, entity.getUniqueId());
+            data.set(BASE_ENTITY_KEY, DataType.UUID, entityUUID);
             if (handleLight && (int)fld("light") != -1) {
                 WrappedLightAPI.createBlockLight(barrierLocation, (int)fld("light"));
             }
