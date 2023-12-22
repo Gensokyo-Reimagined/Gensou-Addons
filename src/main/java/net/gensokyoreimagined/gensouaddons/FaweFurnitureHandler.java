@@ -14,49 +14,44 @@ import com.sk89q.worldedit.util.nbt.CompoundBinaryTag;
 import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureFactory;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureMechanic;
+import io.th0rgal.oraxen.shaded.morepersistentdatatypes.DataType;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.UUID;
 
-public class FaweFurnitureHandler {
+public class FaweFurnitureHandler implements Listener {
     private GensouAddons gensouAddons;
     public FaweFurnitureHandler(GensouAddons gensouAddons){
         this.gensouAddons=gensouAddons;
     }
 
-//    private static final HashMap<UUID,UUID> translated = new HashMap<>();
-//
-//    private UUID arrayToUUID(int[] a){
-//        return new UUID((((long)a[0]) << 32) | (a[1] & 0xffffffffL),(((long)a[2]) << 32) | (a[3] & 0xffffffffL));
-//    }
+    private static final HashMap<UUID,UUID> translated = new HashMap<>();
+
+    private UUID arrayToUUID(int[] a){
+        return new UUID((((long)a[0]) << 32) | (a[1] & 0xffffffffL),(((long)a[2]) << 32) | (a[3] & 0xffffffffL));
+    }
     @Subscribe
     public void onEditSession(EditSessionEvent event) {
         if (event.getWorld() != null) {
-//            if (event.getStage() == EditSession.Stage.BEFORE_HISTORY) {
-//                translated.clear();
-//                event.setExtent(new AbstractDelegateExtent(event.getExtent()) {
-//
-//                    @Nullable
-//                    @Override
-//                    public Entity createEntity(Location location, BaseEntity baseEntity) {
-//                        Entity createdEntity = super.createEntity(location, baseEntity);
-//                        if (createdEntity != null && baseEntity.getNbt() != null && baseEntity.getNbt().keySet().contains("UUID")) {
-//                            translated.put(arrayToUUID(baseEntity.getNbt().getIntArray("UUID")),((IChunkExtent.IChunkEntity) createdEntity).uuid());
-//                        }
-//                        return createdEntity;
-//                    }
-//                });
-//            } else
-            if(event.getStage()== EditSession.Stage.BEFORE_CHANGE) {
+            if(event.getStage()==EditSession.Stage.BEFORE_CHANGE) {
+                translated.clear();
                 event.setExtent(new AbstractDelegateExtent(event.getExtent()) {
 
                     @Nullable
                     @Override
                     public Entity createEntity(Location location, BaseEntity baseEntity) {
                         Entity createdEntity = super.createEntity(location, baseEntity);
+                        if (createdEntity != null && baseEntity.getNbt() != null && baseEntity.getNbt().keySet().contains("UUID")) {
+                            translated.put(arrayToUUID(baseEntity.getNbt().getIntArray("UUID")),((IChunkExtent.IChunkEntity) createdEntity).uuid());
+                        }
                         if (!(createdEntity != null && baseEntity.getNbt() != null && baseEntity.getNbt().keySet().contains("BukkitValues")))
                             return createdEntity;
                         CompoundBinaryTag bukkitValues = baseEntity.getNbt().getCompound("BukkitValues");
@@ -78,6 +73,22 @@ public class FaweFurnitureHandler {
                         return createdEntity;
                     }
                 });
+            }
+        }
+    }
+    @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent event){
+        PersistentDataContainer data = event.getEntity().getPersistentDataContainer();
+        if(data.has(FurnitureMechanic.BASE_ENTITY_KEY)){
+            UUID uuid = data.get(FurnitureMechanic.BASE_ENTITY_KEY, DataType.UUID);
+            if(translated.containsKey(uuid)){
+                data.set(FurnitureMechanic.BASE_ENTITY_KEY,DataType.UUID,translated.get(uuid));
+            }
+        }
+        if(data.has(FurnitureMechanic.INTERACTION_KEY)){
+            UUID uuid = data.get(FurnitureMechanic.INTERACTION_KEY, DataType.UUID);
+            if(translated.containsKey(uuid)){
+                data.set(FurnitureMechanic.INTERACTION_KEY,DataType.UUID,translated.get(uuid));
             }
         }
     }

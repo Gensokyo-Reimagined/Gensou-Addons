@@ -29,12 +29,13 @@ public final class GensouAddons extends JavaPlugin {
         YamlConfiguration mechanicsConfig = mechanicsEntry.getValue();
         ConfigurationSection factorySection = mechanicsConfig.getConfigurationSection("furniture");
         if (factorySection!=null&&factorySection.getBoolean("enabled")) {
-            registerMechanicFactory("furniture", new CustomFurnitureFactory(factorySection),true);
+            registerMechanicFactory("furniture", new CustomFurnitureFactory(factorySection),true); //WILL BREAK ON ORAXEN RELOAD
         }
 
         OraxenItems.loadItems();
         handler = new FaweFurnitureHandler(this);
         WorldEdit.getInstance().getEventBus().register(handler);
+        getServer().getPluginManager().registerEvents(handler,this);
     }
 
     @Override
