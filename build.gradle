@@ -25,9 +25,6 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 //    compileOnly "com.github.oraxen:oraxen:develop" // <====== change that version number when oraxen updates
     compileOnly files("libs/oraxen.jar")
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.39")) // Ref: https://github.com/IntellectualSites/bom
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
 
 //    compileOnly "com.github.oraxen:oraxen:LATEST"
 }

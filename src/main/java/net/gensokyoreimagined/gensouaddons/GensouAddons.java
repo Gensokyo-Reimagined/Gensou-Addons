@@ -1,6 +1,5 @@
 package net.gensokyoreimagined.gensouaddons;
 
-import com.sk89q.worldedit.WorldEdit;
 import io.th0rgal.oraxen.OraxenPlugin;
 import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.config.ResourcesManager;
@@ -18,7 +17,6 @@ public final class GensouAddons extends JavaPlugin {
 
     public static Logger logger;
 
-    private FaweFurnitureHandler handler;
     @Override
     public void onEnable() {
         logger=getLogger();
@@ -33,15 +31,11 @@ public final class GensouAddons extends JavaPlugin {
         }
 
         OraxenItems.loadItems();
-        handler = new FaweFurnitureHandler(this);
-        WorldEdit.getInstance().getEventBus().register(handler);
-        getServer().getPluginManager().registerEvents(handler,this);
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        WorldEdit.getInstance().getEventBus().unregister(handler);
     }
 
 }
