@@ -1,19 +1,13 @@
 package net.gensokyoreimagined.gensouaddons;
 
-//import com.jeff_media.morepersistentdatatypes.DataType;
-import io.th0rgal.oraxen.compatibilities.provided.lightapi.WrappedLightAPI;
 import io.th0rgal.oraxen.mechanics.MechanicFactory;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.BlockLocation;
-import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.DisplayEntityProperties;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureMechanic;
-//import io.th0rgal.oraxen.mechanics.provided.gameplay.light.LightMechanic;
-import io.th0rgal.oraxen.mechanics.provided.gameplay.limitedplacing.LimitedPlacing;
 import io.th0rgal.oraxen.shaded.jeff_media.morepersistentdatatypes.DataType;
 import io.th0rgal.oraxen.utils.BlockHelpers;
 import io.th0rgal.oraxen.utils.EntityUtils;
 import io.th0rgal.oraxen.utils.ItemUtils;
 import io.th0rgal.oraxen.utils.PluginUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,7 +21,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -126,7 +119,7 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
             float height;
             Vector offset = new Vector();
 
-            if ((facing.isCartesian()) && ((entity instanceof Display))) {
+            if ((facing.isCartesian()) && (entity instanceof Display)) {
                 if (location.clone().add(facing.getOppositeFace().getDirection()).getBlock().getBlockData() instanceof Slab slab) {
                     if (slab.getType() == Slab.Type.BOTTOM && facing.getModY() == 1) {
                         offset = new Vector(0, -0.5, 0);
@@ -147,26 +140,23 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
 //            Interaction interaction = (Interaction) refl("spawnInteractionEntity",itemDisplay, interactionLoc, width, height);
             Location barrierLoc = EntityUtils.isNone(itemDisplay) && getDisplayEntityProperties().hasScale() ? location.clone().subtract(0.0, 0.5 * getDisplayEntityProperties().getScale().y(), 0.0) : location;
             if (this.hasBarriers()) {
-                this.setBarrierHitbox(entity, barrierLoc, yaw, offset, true);
-                //refl("setBarrierHitbox",entity, barrierLoc, yaw, true);
+                this.setBarrierHitbox(entity, barrierLoc, yaw, offset);
+                //refl("setBarrierHitbox",entity, barrierLoc, yaw);
             } else if (this.hasSeat() && interaction != null) {
                 UUID seatUuid = (UUID) refl("spawnSeat",location.getBlock(), (boolean)fld("hasSeatYaw") ? fld("seatYaw") : yaw);
                 interaction.getPersistentDataContainer().set(SEAT_KEY, DataType.UUID, seatUuid);
                 itemDisplay.getPersistentDataContainer().set(SEAT_KEY, DataType.UUID, seatUuid);
-                //location.getWorld().getEntity(seatUuid).teleport(location.getWorld().getEntity(seatUuid).getLocation().clone().add(offset));
+                location.getWorld().getEntity(seatUuid).teleport(location.getWorld().getEntity(seatUuid).getLocation().clone().add(offset));
             }
 
-            if ((int)fld("light") != -1) {
-                WrappedLightAPI.createBlockLight(location, (int)fld("light"));
+            if (getLight().hasLightLevel()) {
+                getLight().createBlockLight(location.getBlock());
             }
-//            if (getLight().hasLightLevel()) {
-//                getLight().createBlockLight(location.getBlock());
-//            }
         }else{
             super.setEntityData(entity,yaw,item,facing);
         }
     }
-    public void setBarrierHitbox(Entity entity, Location location, float yaw, Vector offset, boolean handleLight){
+    public void setBarrierHitbox(Entity entity, Location location, float yaw, Vector offset){
         List<Location> barrierLocations = this.getLocations(yaw, BlockHelpers.toCenterBlockLocation(location), (List<BlockLocation>) fld("barriers"));
 
         for(Location barrierLocation: barrierLocations) {
@@ -183,12 +173,9 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
             data.set(ROOT_KEY, PersistentDataType.STRING, (new BlockLocation(location.clone())).toString());
             data.set(ORIENTATION_KEY, PersistentDataType.FLOAT, yaw);
             data.set(BASE_ENTITY_KEY, DataType.UUID, entity.getUniqueId());
-            if (handleLight && ((int)fld("light")) != -1) {
-                WrappedLightAPI.createBlockLight(barrierLocation, ((int)fld("light")));
+            if (getLight().hasLightLevel()) {
+                getLight().createBlockLight(block);
             }
-//            if (((LightMechanic)fld("light")).hasLightLevel()) {
-//                ((LightMechanic)fld("light")).createBlockLight(block);
-//            }
         }
     }
 }
