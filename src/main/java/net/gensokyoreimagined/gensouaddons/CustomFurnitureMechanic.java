@@ -1,9 +1,10 @@
 package net.gensokyoreimagined.gensouaddons;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
+import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.mechanics.MechanicFactory;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.BlockLocation;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureMechanic;
-import io.th0rgal.oraxen.shaded.jeff_media.morepersistentdatatypes.DataType;
 import io.th0rgal.oraxen.utils.BlockHelpers;
 import io.th0rgal.oraxen.utils.EntityUtils;
 import io.th0rgal.oraxen.utils.ItemUtils;
@@ -75,13 +76,9 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
     public Entity place(Location location, ItemStack originalItem, Float yaw, BlockFace facing, boolean checkSpace) {
         if (!location.isWorldLoaded()) {
             return null;
-        } else if (checkSpace && this.notEnoughSpace(yaw, location)) {
+        } else if (checkSpace&&this.notEnoughSpace(yaw, location)) {
             return null;
         } else {
-            assert location.getWorld() != null;
-
-            this.setPlacedItem();
-
             assert location.getWorld() != null;
 
             Class<? extends Entity> entityClass = this.getFurnitureEntityType().getEntityClass();
@@ -89,13 +86,9 @@ public class CustomFurnitureMechanic extends FurnitureMechanic {
                 entityClass = ItemFrame.class;
             }
 
-            ItemStack item;
-            if (fld("evolvingFurniture") == null) {
-                item = ItemUtils.editItemMeta(originalItem.clone(), (meta) -> {
-                    meta.setDisplayName("");
-                });
-            } else {
-                item = (ItemStack) fld("placedItem");
+            ItemStack item = OraxenItems.getOptionalItemById((String)fld("placedItemId")).map(b -> b.build().clone()).orElse(originalItem);
+            if(this.getEvolution()==null){
+                ItemUtils.editItemMeta(item, meta -> meta.setDisplayName(""));
             }
 
             item.setAmount(1);
