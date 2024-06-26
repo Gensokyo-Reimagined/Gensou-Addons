@@ -2,6 +2,7 @@ package net.gensokyoreimagined.gensouaddons;
 
 import io.th0rgal.oraxen.OraxenPlugin;
 import io.th0rgal.oraxen.api.OraxenFurniture;
+import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.mechanics.Mechanic;
 import io.th0rgal.oraxen.mechanics.MechanicFactory;
 import io.th0rgal.oraxen.mechanics.MechanicsManager;
@@ -70,7 +71,7 @@ public class FurnitureSwitcher {
     private static final Field itemField;
     static {
         try {
-            itemField = FurnitureMechanic.class.getDeclaredField("placedItem");
+            itemField = FurnitureMechanic.class.getDeclaredField("placedItemId");
             itemField.setAccessible(true);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
@@ -93,8 +94,7 @@ public class FurnitureSwitcher {
             ids.forEach(furniture -> {
                 try {
                     FurnitureMechanic mechanic = (FurnitureMechanic) FurnitureFactory.getInstance().getMechanic(furniture);
-                    mechanic.setPlacedItem();
-                    furnitures.add((ItemStack) itemField.get(mechanic));
+                    furnitures.add(OraxenItems.getOptionalItemById((String) itemField.get(mechanic)).map(b -> b.build().clone()).orElse(OraxenItems.getItemById(this.getItemID()).build()));
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
